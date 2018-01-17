@@ -1,0 +1,41 @@
+use classicmodels;
+delimiter $$
+create procedure show_products(
+IN linea_producto varchar(50))
+BEGIN
+	declare line varchar(50);
+	set line = concat(linea_producto, “%”);
+	select * from products 
+	where productLine like line;
+END$$
+delimiter ;
+
+
+use classicmodels;
+delimiter $$
+create procedure show_clients(
+IN nombre_cliente varchar(50))
+BEGIN
+	declare line varchar(50);
+	set line = concat(nombre_cliente, “%”);
+	select * from clients 
+	where productLine like line;
+END$$
+delimiter ;
+
+
+use classicmodels;
+delimiter $$
+create procedure show_extremes()
+BEGIN
+	DECLARE max1 DECIMAL(10,2);
+    DECLARE min1 DECIMAL(10,2);
+    
+	select MAX(buyPrice) into max1 from products;
+	select MIN(buyPrice) into min1 from products;
+    
+    SELECT * FROM products
+		WHERE buyPrice=min1 OR buyPrice=max1; 
+END$$
+delimiter ;
+
