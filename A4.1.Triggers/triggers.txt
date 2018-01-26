@@ -1,0 +1,14 @@
+
+Crea los 3 triggers vistos en clase
+1. Trigger para el salario mayor al 30%
+2. Trigger para colocar órdenes de compra cuando sí hay suficientes productos
+3. Trigger que reduce la cantidad de productos del inventario cuando la orden de compra cambia a delivered
+
+
+create trigger salary_restrictions after update on employee referencing old as old_values  new as new_values for each row mode db2sql  when (new_values.salary > old_values.salary*1.3 ) begin atomic   SIGNAL SQLSTATE '56001' ('no_seas'); end
+
+create table ordenes (id_prod int not null, cant_producto bigint, estado varchar (12))
+
+create trigger orden_compra after update on ordenes referencing old as old_values new as new_values for each row mode db2sql when (new_values.cant_producto >0) begin atomic ; end
+
+create trigger actualiza_stock after update on ordenes referencing old as old_values new as new_values for each row mode db2sql when (new_values.estado = ‘delivered’ ) begin atomic new_values.cant_producto = old_values.cant_producto -1 ; end
