@@ -1,0 +1,139 @@
+----------------------------MYSQL---------------------------------
+
+create table log_film (
+	id int primary key not null auto_increment,
+    tipo varchar(20) not null default 'update',
+    film_id smallint(5) unsigned not null,
+    last_value varchar(255),
+    new_value varchar(255),
+    ts timestamp,
+    foreign key (film_id) references film (film_id)
+);
+
+delimiter //
+create procedure save_log_film(in film smallint(5) unsigned, in last_ varchar(255), in new_ varchar(255))
+begin
+	insert into log_film (film_id, last_value, new_value) values(film, last_, new_);
+end
+//
+
+delimiter ;
+
+delimiter //
+create trigger save_log_on_update 
+after update
+on film
+for each row
+begin
+	call save_log_film(new.film_id, old.original_language_id, new.original_language_id);
+end//
+delimiter ;
+
+
+DELIMITER //
+CREATE PROCEDURE cursor()
+BEGIN
+  alter table films
+  add column original_language varchar(20);
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE first_name, last_name, genre varCHAR(20);
+  DECLARE cur1 CURSOR FOR SELECT name, first_name, last_name FROM film
+  join film_category on film.film_id = film_category.film_id
+  join category on film_category.category_id = category.category_id
+  join film_actor on film.film_id = film_actor.film_id
+  join actor on actor.actor_id =film_actor.actor_id;
+
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  OPEN cur1;
+
+  read_loop: LOOP
+
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+
+        FETCH cur1 INTO genre,first_name,last_name;
+        if(CONCAT((first_name)," ",(last_name)='SISSI SOBIESKI')
+        {
+			update film set original_language='aleman';
+        }else if(CONCAT((first_name)," ",(last_name)='ED CHASE')
+        {
+			update film set original_language='mandarin';
+        }else if(CONCAT((first_name)," ",(last_name)='AUDREY OLIVIER')
+        {
+			update film set original_language='frances';
+        }else if(genre='Documentary')
+        {
+			update film set original_language='italiano';
+        else if(genre='Foreign')
+        {
+			update film set original_language='japones';
+        }else update film set original_language='ingles';
+
+    END LOOP;
+
+  CLOSE cur1;
+
+END;
+//
+
+
+---------------DB2------------
+CREATE TABLE gomitas
+(
+id int not null,
+price decimal(6,2) NOT NULL,
+cstart date NOT NULL,
+cend date NOT NULL,
+period business_time(cstart, cend),
+PRIMARY key(course_number, bussiness_time WITHOUT overlaps));
+
+-- insert values
+insert into gomitas(id,price, cstart, cend, period)
+insert into gomitas(1, 15,  '2018-01-01', '2019-06-01')
+insert into gomitas(2, 20,  '2018-01-01', '2019-06-01')
+insert into gomitas(3, 13,  '2018-01-01', '2019-06-01')
+insert into gomitas(4, 18,  '2018-01-01', '2019-06-01')
+insert into gomitas(5, 14,  '2018-01-01', '2019-06-01')
+insert into gomitas(6, 16,  '2018-01-01', '2019-06-01')
+insert into gomitas(7, 22,  '2018-01-01', '2019-06-01')
+insert into gomitas(8, 25,  '2018-01-01', '2019-06-01')
+insert into gomitas(9, 19,  '2018-01-01', '2019-06-01')
+insert into gomitas(10, 21,  '2018-01-01', '2019-06-01')
+insert into gomitas(11, 23,  '2018-01-01', '2019-06-01')
+insert into gomitas(12, 24,  '2018-01-01', '2019-06-01')
+
+
+update gomitas
+for portion of business_time FROM '2018-2-1' to '2019-1-1'
+  set price = price * 1.45;
+
+update gomitas
+for portion of business_time FROM '2018-2-15' to '2019-1-1'
+  set price = (price / 1.45) * 1.1;
+
+update gomitas
+for portion of business_time FROM '2018-4-25' to '2019-1-1'
+  set price = price * 1.45;
+
+update gomitas
+for portion of business_time FROM '2018-5-5' to '2019-1-1'
+  set price = (price / 1.45)*1.1;
+
+update gomitas
+for portion of business_time FROM '2018-10-25' to '2019-1-1'
+  set price = price * 1.45;
+
+update gomitas
+for portion of business_time FROM '2018-11-5' to '2019-1-1'
+  set price = (price / 1.45) * 1.1;
+
+
+select SUM(price)/COUNT(*) as promedio from gomitas where id = 1;
+
+select MAX(price) as MAX from gomitas where id = 1;
+
+select MIN(price) as MAX from gomitas where id = 1;
+
