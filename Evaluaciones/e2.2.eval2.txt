@@ -1,0 +1,133 @@
+Examen Segundo Parcial Bases Avanzadas 
+Enrique Vadillo Calva A01018714
+
+Nota: para cada pregunta deberás resolverla utilizando
+“aggregate framework”
+“map-reduce”
+Utiliza la base de datos GRADES.JSON para contestar las siguientes preguntas:
+
+#############################################################################################
+¿Cuál es el total de alumnos inscritos?
+#############################################################################################
+var mapStudent = function() {
+  emit(this.student_id, 1);
+};
+var reduceStudent = function(student_id, values) {
+  return Array.sum(values);
+}
+db.exam.mapReduce(
+  mapStudent,
+  reduceStudent,
+  {
+    out:"total_alumnos"
+  }
+)
+
+tambien si asumimos que los id son contiguos y empiezan en 0 se puede usar:
+
+db.exam.find().sort({student_id:-1}).limit(1).pretty()
+#############################################################################################
+¿Cuántos cursos se han impartido?
+#############################################################################################
+var mapClass = function() {
+  emit(this.class_id, 1);
+};
+var reduceClass = function(class_id, values) {
+  return Array.sum(values);
+}
+db.exam.mapReduce(
+  mapStudent,
+  reduceStudent,
+  {
+    out:"total_cursos"
+  }
+)
+
+ó al ver que los id son seguidos y empiezan en 0:
+
+ db.exam.find().sort({class_id:-1}).limit(1).pretty()
+
+#############################################################################################
+Encuentra, para cada alumno, su promedio obtenido en cada una de las clases en las que fue inscrito (promedia exámenes, quizes, tareas y todas las actividades realizadas que contenga un grade)
+#############################################################################################
+var mapScores = function() {
+  this.scores.forEach((value)=>{
+    emit({student_id:this.student_id,class_id: this.class_id,entregas:this.scores.length},value.score);
+  });
+};
+var reduceScore = function(name, score) {
+  return (Array.sum(score)/(name.entregas)) ;
+};
+db.exam.mapReduce(
+  mapScore,
+  reduceScore,
+  {
+    out:"promedios"
+  }
+)
+#############################################################################################
+¿Cuál fue la materia que tiene la calificación más baja (muestra el id de la materia, el id del alumno y la calificación)?
+#############################################################################################
+db.Promedios.find().sort({value:1}).limit(1)
+
+{ "_id" : { "student_id" : 18, "class_id" : 8, "entregas" : 3 }, "value" : 10.206653332610028 }
+
+#############################################################################################
+¿Cuál es la materia en la que se han dejado más tareas?
+#############################################################################################
+db.exam.aggregate([
+    {
+        $unwind:"$scores"
+    },
+    {
+        $match:{"scores.type":"homework"}
+    },
+    {
+        $sortByCount: "$class_id"
+    }
+])
+en la clase 22 se entregaron 43 tareas
+{ "_id" : 22, "count" : 43 }
+
+#############################################################################################
+¿Qué alumno se inscribió en más cursos?
+#############################################################################################
+var mapStudentCourses = function() {
+  emit(this.student_id, 1);
+};
+var reduceStudentCourses = function(student_id, values) {
+  return Array.sum(values);
+};
+db.exam.mapReduce(
+  mapStudentCourses,
+  reduceStudentCourses,
+  {
+    out:"alumno_mas_cursos"
+  }
+)
+
+db.alumno_mas_cursos.find().limit(1);
+
+el alumno 0 se inscribió a 11 cursos
+
+{ "_id" : 0, "value" : 11 }
+
+#############################################################################################
+¿Cuál fue el curso que tuvo más reprobados?
+#############################################################################################
+db.promedios.aggregate([
+    {
+        $match:
+                {
+                    value:{$lt:70}                        
+                }
+    },
+    {
+        $sortByCount:
+                    {
+                        "$_id.class_id"
+                    }
+    }
+])
+
+
