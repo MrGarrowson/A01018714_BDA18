@@ -1,0 +1,38 @@
+Enrique Vadillo A01018714
+Ejercicio Neo4j
+
+Utilizando la base de datos Movies de ejemplo resuelve las siguientes preguntas:
+
+¿Cuántos actores hay?
+match((actor:Person)-[:ACTED_IN]->(movie:Movie)) return count(distinct actor)
+102 
+
+¿cuántos productores hay?
+match((producer:Person)-[:PRODUCED]->(movie:Movie)) return count(distinct producer)
+8
+¿cuántos directores hay?
+match((director:Person)-[:DIRECTED]->(movie:Movie)) return count(distinct director)
+28
+
+¿cuántas películas hay?
+match(movie:Movie) return count(movie)
+38
+
+¿Quién ha escrito más películas?
+match (writer:Person) with writer, size((writer)-[:WROTE]->()) as n return writer, n order by n 1.Lilly Wachowski
+
+El top 5 de películas con el mejor Rating
+match ()-[review:REVIEWED]->(movie:Movie) return movie, review.rating order by review.rating desc limit 5
+
+¿Qué personas debería conocer Al Pacino para que le presentaran a Audrey Tautou?
+match p=shortestPath((al:Person{name:"Al Pacino"})-[*]-(au:Person{name:"Audrey Tautou"})) with nodes(p) as nodes unwind nodes as n with n where "Person" in labels(n) and n.name <> "Audrey Tautou" and n.name <> "Al Pacino" return n
+
+James Thompson, Keanu Reeves.
+
+
+¿Qué actores que han producido y actuado en la misma película?
+
+match (p:Person)-[:ACTED_IN]->(m:Movie)<-[:PRODUCED]-(p:Person) return p
+
+0
+ 
