@@ -1,0 +1,33 @@
+Actividad Individual Bases de datos NoSQL (MongoDB) 
+
+Los profesores de la carrera de sociología de la universidad autónoma de Buenos Aires tienen almacenada en Excel la siguiente información de sus cursos, profesores y alumnos
+    • Cursos impartidos
+        ◦ Título del curso
+        ◦ Profesor titular 
+        ◦ Año en el que se ofrece el curso (Los cursos se ofrecen de forma anual)
+        ◦ Evaluaciones escritas
+            ▪ Número de preguntas teóricas
+            ▪ Número de preguntas prácticas
+        ◦ Evaluación del curso
+            ▪ Es una calificación otorgada por cada uno de los alumnos.
+        ◦ Evaluación del profesor
+            ▪ Es una calificación otorgada por cada uno de los alumnos.
+        ◦ Comentarios de los alumnos para cada curso 
+            ▪ La evaluación del curso se hace a mediados de año y a finales de año
+    • Alumnos
+        ◦ Nombre, matrícula, dirección, género.
+        ◦ Cursos en los que ha estado inscrito
+            ▪ Nombre del curso
+            ▪ Año de inscripción
+            ▪ Calificaciones obtenidas en las 4 evaluaciones
+            ▪ Calificación final del curso
+    • Profesores
+        ◦ Nombre, nómina, dirección y género
+        ◦ Cursos que ha impartido
+            ▪ Título del curso
+            ▪ Año en que lo impartió
+
+La universidad te ha contratado a ti para que eres experto en tecnología para que le propongas un modelo de almacenamiento de su información. Las notas adicionales que te ha dado la universidad son:
+    1. La información de cursos, profesores y alumnos se actualiza dos veces al año. Al inicio (se dan de alta cursos, alumnos y profesores) y al final del año que se registran calificaciones
+
+    2. Se desea poder acceder rápidamente a la información para hacer análisis estadísticos (promedio de alumnos por curso, cuántos hombres, cuántas mujeres, etc.). Por ahora la universidad no quiere que hagas ese análisis, pero sí desea que el modelo que le entregues permita realizar esas operaciones fácilmente
