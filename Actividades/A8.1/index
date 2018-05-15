@@ -1,0 +1,19 @@
+
+
+----------normal query--------           
+
+Query: select * from orderdetails where orderLineNumber = 1 and quantityOrdered > 50;
+
+Cost: 609.20
+
+
+
+-----adding indexes---------
+
+        | Select 1  | Select 2  | Select 3  |
+Index 1 | 95.20     | 95.20     | 95.20     |
+Index 2 | 93.41     | 27.62     | 27.62     |
+Index 3 | 8.01      | 3.02      | 3.02      |
+
+
+es más rápido usar index que el group by
