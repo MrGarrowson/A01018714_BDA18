@@ -1,0 +1,6 @@
+De aquí saqué toda la info
+
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-master-slave-replication-in-mysql
+
+https://dev.mysql.com/doc/refman/8.0/en/replication-howto.html
